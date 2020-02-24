@@ -1,7 +1,7 @@
-#include <iostream>
-#include "utils.h"
+#include "interpreter/CommandHandlersImpl.h"
 
 int main() {
-    std::cout << sum(1, 2) << std::endl;
+    registerCommandHandlers();
+
     return 0;
 }
