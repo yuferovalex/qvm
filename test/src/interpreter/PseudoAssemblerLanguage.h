@@ -1,9 +1,9 @@
-#ifndef VM_PSEUDOASEMBLERLANGUAGE_H
-#define VM_PSEUDOASEMBLERLANGUAGE_H
+#ifndef VM_PSEUDOASSEMBLERLANGUAGE_H
+#define VM_PSEUDOASSEMBLERLANGUAGE_H
 
 #include "interpreter/Command.h"
 
-#define QVM_ASM_BEGIN do { Command command;
+#define QVM_ASM_BEGIN(type) []() { auto program = type; Command command;
 
 #define UNARY_CMD_HELPER_(cmd, l, lref, res)                              \
     command.operation = cmd | ((lref) * (Command::Flags::LHS_OP_REF);     \
@@ -42,6 +42,6 @@
 #define CMD_GT(l, r, res)   BINARY_CMD_HELPER_(Command::Operation::GT  , l, r, res)
 #define CMD_GE(l, r, res)   BINARY_CMD_HELPER_(Command::Operation::GE  , l, r, res)
 
-#define QVM_ASM_END   } while (false)
+#define QVM_ASM_END   return program; } ()
 
-#endif //VM_PSEUDOASEMBLERLANGUAGE_H
+#endif //VM_PSEUDOASSEMBLERLANGUAGE_H

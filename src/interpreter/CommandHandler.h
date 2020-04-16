@@ -15,7 +15,6 @@ public:
     /**
      * Операция, за которую отвечает обработчик.
      */
-    [[nodiscard]]
     virtual Command::Operation operation() const = 0;
 
     /**

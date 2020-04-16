@@ -16,7 +16,6 @@ void registerCommandHandlers();
  */
 class AddCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::ADD; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -28,7 +27,6 @@ public:
  */
 class SubCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::SUB; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -40,7 +38,6 @@ public:
  */
 class MulCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::MUL; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -52,7 +49,6 @@ public:
  */
 class DivCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::DIV; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -64,7 +60,6 @@ public:
  */
 class AbsCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::ABS; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -76,7 +71,6 @@ public:
  */
 class SqrtCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::SQRT; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -88,7 +82,6 @@ public:
  */
 class NegCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::NEG; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -100,7 +93,6 @@ public:
  */
 class NotCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::NOT; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -112,7 +104,6 @@ public:
  */
 class OrCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::OR; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -124,7 +115,6 @@ public:
  */
 class AndCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::AND; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -136,7 +126,6 @@ public:
  */
 class XorCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::XOR; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -148,7 +137,6 @@ public:
  */
 class EqCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::EQ; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -160,7 +148,6 @@ public:
  */
 class NeCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::NE; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -172,7 +159,6 @@ public:
  */
 class LtCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::LT; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -184,7 +170,6 @@ public:
  */
 class LeCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::LE; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -196,7 +181,6 @@ public:
  */
 class GtCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::GT; }
 
     bool execute(Memory &memory, const Command &cmd) final;
@@ -208,7 +192,6 @@ public:
  */
 class GeCommandHandler final : public CommandHandler {
 public:
-    [[nodiscard]]
     Command::Operation operation() const final { return Command::Operation::GE; }
 
     bool execute(Memory &memory, const Command &cmd) final;

@@ -15,7 +15,6 @@ public:
      * @param ref ссылка на значение.
      * @return Возвращает значение хранящееся по этой ссылке.
      */
-    [[nodiscard]]
     virtual std::optional<Command::Value> value(Command::Reference ref) const = 0;
 
     /**

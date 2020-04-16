@@ -75,6 +75,7 @@ struct Command {
     };
 
     uint32_t operation;
+    uint32_t : 32;
     Operand lhsOperand;
     Operand rhsOperand;
     Reference resultRef;

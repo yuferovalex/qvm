@@ -20,13 +20,10 @@ public:
     explicit DispatcherConfigImpl(Memory &memory, std::optional<size_t> batchSize = std::nullopt,
             std::optional<size_t> threadCount = std::nullopt);
 
-    [[nodiscard]]
     size_t batchSize() const final;
 
-    [[nodiscard]]
     size_t threadCount() const final;
 
-    [[nodiscard]]
     std::unique_ptr<Interpreter> createInterpreter() final;
 
 private:

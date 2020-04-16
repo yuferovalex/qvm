@@ -31,12 +31,12 @@ public:
      *
      * @tparam InputIterator Тип итератора для чтения команд, входящих в программу.
      * @param begin          Итератор для чтения команд, входящих в программу.
-     * @param programLength  Кол-во команд в программе.
+     * @param end            Итератор, указывающий на конец потока команд, входящих в программу.
      */
     template<typename InputIterator>
-    void execute(InputIterator &&begin, size_t programLength) {
+    void execute(InputIterator &&begin, InputIterator &&end) {
         auto threads = createThreads();
-        createBatches(begin, programLength);
+        createBatches(begin, end);
         waitForAll(std::move(threads));
     }
 
@@ -59,19 +59,15 @@ private:
      *
      * @tparam InputIterator Тип итератора для чтения команд, входящих в программу.
      * @param begin          Итератор для чтения команд, входящих в программу.
-     * @param programLength  Кол-во команд в программе.
+     * @param end            Итератор, указывающий на конец потока команд, входящих в программу.
      */
     template<typename InputIterator>
-    void createBatches(InputIterator &&operationIterator, size_t programLength) {
-        for (auto batchSize = m_config->batchSize(); programLength != 0; programLength -= batchSize) {
-            // Вычисляем размер пакета заданий
-            batchSize = std::min(batchSize, programLength);
-
+    void createBatches(InputIterator &&begin, InputIterator &&end) {
+        for (auto batchSize = m_config->batchSize(); begin != end;) {
             // Создаем пакет
-            Batch batch { batchSize };
-
-            for (size_t i = 0; i < batchSize; i++) {
-                batch.push_back(*operationIterator++);
+            Batch batch{batchSize};
+            for (size_t i = 0; i < batchSize && begin != end; i++) {
+                batch.push_back(*begin++);
             }
 
             // Кладем его в очередь пакетов

@@ -5,7 +5,7 @@
 #include "dispatcher/Dispatcher.h"
 #include "memory/SharedMemory.h"
 
-#include "interpreter/PseudoAsemblerLanguage.h"
+#include "interpreter/PseudoAssemblerLanguage.h"
 
 TEST(DispatcherTest, test) {
     registerCommandHandlers();
@@ -17,14 +17,13 @@ TEST(DispatcherTest, test) {
     // | 1 2 |
     // | 3 4 |
 
-    std::vector<Command> program;
-    QVM_ASM_BEGIN
+    auto program = QVM_ASM_BEGIN(std::vector<Command>())
         CMD_MUL(VAL(1.0), VAL(4.0), 1);
         CMD_MUL(VAL(2.0), VAL(3.0), 2);
-        CMD_SUB(  REF(1),   REF(2), 3);
-    QVM_ASM_END;
+        CMD_SUB(REF(1), REF(2), 3);
+            QVM_ASM_END;
 
-    dispatcher.execute(program.begin(), program.size());
+    dispatcher.execute(program.begin(), program.end());
 
     EXPECT_DOUBLE_EQ(-2.0, sharedMemory.value(3)->number);
 }

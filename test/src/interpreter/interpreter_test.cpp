@@ -8,7 +8,7 @@
 #include "interpreter/CommandHandler.h"
 #include "memory/Memory.h"
 
-#include "PseudoAsemblerLanguage.h"
+#include "PseudoAssemblerLanguage.h"
 
 using ::testing::Return;
 using ::testing::Field;
@@ -70,12 +70,10 @@ namespace {
  * команда ещё не готова к выполнению (её аргументы не вычислены), то она ставится в конец очереди.
  */
 TEST_F(InterpreterTest, should_execute_commands_in_queue_order) {
-    InterpreterImpl::CommandQueue program { 2 };
-
-    QVM_ASM_BEGIN
-        CMD_SUB(  REF(2), VAL(2.0), 1);
+    auto program = QVM_ASM_BEGIN(InterpreterImpl::CommandQueue{2})
+        CMD_SUB(REF(2), VAL(2.0), 1);
         CMD_ADD(VAL(1.0), VAL(3.0), 2);
-    QVM_ASM_END;
+            QVM_ASM_END;
 
     {
         ::testing::InSequence sequence;
