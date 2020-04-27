@@ -11,7 +11,9 @@ set(HEADER_FILES
         dispatcher/DispatcherConfig.h
         io/ParamMeta.h
         io/command/CommandFileReaderV1.h
-        )
+        app/Options.h
+        app/SharedMemoryApplication.h
+        utils/utils.h)
 
 set(SOURCE_FILES
         memory/SharedMemory.cpp
@@ -20,6 +22,8 @@ set(SOURCE_FILES
         dispatcher/Dispatcher.cpp
         dispatcher/DispatcherConfigImpl.cpp
         io/command/CommandFileReaderV1.cpp
-        )
+        app/Options.cpp
+        app/SharedMemoryApplication.cpp
+        io/data/CsvDataReader.cpp io/data/CsvDataReader.h utils/utils.cpp)
 
-add_library(vm_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
+add_library(qvm_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})

@@ -1,7 +1,6 @@
-#include "interpreter/CommandHandlersImpl.h"
+#include "app/SharedMemoryApplication.h"
 
-int main() {
-    registerCommandHandlers();
-
-    return 0;
+int main(int argc, const char **argv) {
+    SharedMemoryApplication app(argc, argv);
+    return app.run();
 }

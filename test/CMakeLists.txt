@@ -1,4 +1,4 @@
-project(vm_tests)
+project(qvm_tests)
 
 include_directories(src)
 add_subdirectory(lib/googletest)

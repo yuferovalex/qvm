@@ -5,7 +5,7 @@
 #include "dispatcher/Dispatcher.h"
 #include "memory/SharedMemory.h"
 
-#include "interpreter/PseudoAssemblerLanguage.h"
+#include "test-utils/PseudoAssemblerLanguage.h"
 
 TEST(DispatcherTest, test) {
     registerCommandHandlers();

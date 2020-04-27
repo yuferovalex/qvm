@@ -6,6 +6,7 @@
 
 #include "interpreter/CommandHandlersImpl.h"
 #include "memory/Memory.h"
+#include "test-utils/ResultIs.h"
 
 using ::testing::Return;
 
@@ -17,7 +18,6 @@ namespace {
         MOCK_METHOD2(setValue, void (Command::Reference ref, Command::Value value));
     };
 
-    typedef std::variant<bool, double> Result;
     typedef std::tuple<std::shared_ptr<CommandHandler>, Command::Value, Command::Value, Result> Params;
 
     class CommandHandlersTest :
@@ -26,25 +26,6 @@ namespace {
     protected:
         MockMemory memory;
     };
-}
-
-/**
- * Типизированный компаратор результата вычисления команды.
- */
-MATCHER_P(ResultIs, expectedResult, "result is") {
-    struct Comparator {
-        Command::Value actual;
-
-        bool operator()(bool expected) {
-            return actual.boolean == expected;
-        }
-
-        bool operator()(double expected) {
-            return actual.number == expected;
-        }
-    };
-
-    return std::visit(Comparator { arg }, expectedResult);
 }
 
 INSTANTIATE_TEST_CASE_P(

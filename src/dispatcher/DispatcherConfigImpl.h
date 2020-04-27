@@ -14,11 +14,11 @@ class Memory;
  */
 class DispatcherConfigImpl final : public DispatcherConfig {
 public:
-    const size_t DEFAULT_THREAD_COUNT = std::thread::hardware_concurrency() - 1;
-    const size_t DEFAULT_BATCH_SIZE = 1'000'000 /** команд в пакете */;
+    static const size_t DEFAULT_THREAD_COUNT;
+    static const size_t DEFAULT_BATCH_SIZE;
 
-    explicit DispatcherConfigImpl(Memory &memory, std::optional<size_t> batchSize = std::nullopt,
-            std::optional<size_t> threadCount = std::nullopt);
+    explicit DispatcherConfigImpl(Memory &memory, size_t batchSize = DEFAULT_BATCH_SIZE,
+            size_t threadCount = DEFAULT_THREAD_COUNT);
 
     size_t batchSize() const final;
 

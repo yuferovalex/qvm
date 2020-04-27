@@ -2,7 +2,7 @@
 
 #include "io/command/CommandFileReaderV1.h"
 
-#include "interpreter/PseudoAssemblerLanguage.h"
+#include "test-utils/PseudoAssemblerLanguage.h"
 
 /**
  * Тест проверяет работоспособность класса {@link CommandFileReaderV1} на примере

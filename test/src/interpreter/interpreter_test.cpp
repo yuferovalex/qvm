@@ -8,7 +8,7 @@
 #include "interpreter/CommandHandler.h"
 #include "memory/Memory.h"
 
-#include "PseudoAssemblerLanguage.h"
+#include "test-utils/PseudoAssemblerLanguage.h"
 
 using ::testing::Return;
 using ::testing::Field;

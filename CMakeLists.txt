@@ -1,17 +1,17 @@
 cmake_minimum_required(VERSION 3.15)
-project(vm)
+project(qvm VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 17)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-set(BOOST_ROOT $ENV{BOOST_LIB_ROOT})
+find_package(Boost 1.65.0 COMPONENTS program_options filesystem REQUIRED)
+find_package(Threads REQUIRED)
 
-find_package(Boost 1.72.0 REQUIRED)
+include_directories(src ${Boost_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/src)
 
-include_directories(src ${Boost_INCLUDE_DIRS})
 add_subdirectory(src)
 add_subdirectory(test)
 
-add_executable(vm src/main.cpp)
-target_link_libraries(vm vm_lib)
-
-
+add_executable(qvm src/main.cpp)
+target_link_libraries(qvm qvm_lib ${Boost_LIBRARIES} Threads::Threads)
+configure_file(src/app/Config.h.template ${PROJECT_BINARY_DIR}/src/app/Config.h)

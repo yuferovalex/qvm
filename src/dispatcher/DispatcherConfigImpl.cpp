@@ -1,11 +1,13 @@
 #include "dispatcher/DispatcherConfigImpl.h"
 #include "interpreter/InterpreterImpl.h"
 
-DispatcherConfigImpl::DispatcherConfigImpl(Memory &memory, std::optional<size_t> batchSize,
-                                           std::optional<size_t> threadCount)
+const size_t DispatcherConfigImpl::DEFAULT_THREAD_COUNT = std::thread::hardware_concurrency() - 1;
+const size_t DispatcherConfigImpl::DEFAULT_BATCH_SIZE = 1'000'000 /** команд в пакете */;
+
+DispatcherConfigImpl::DispatcherConfigImpl(Memory &memory, size_t batchSize, size_t threadCount)
         : m_memory(memory)
-        , m_batchSize(batchSize.value_or(DEFAULT_BATCH_SIZE))
-        , m_threadCount(threadCount.value_or(DEFAULT_THREAD_COUNT))
+        , m_batchSize(batchSize)
+        , m_threadCount(threadCount)
 {}
 
 size_t DispatcherConfigImpl::batchSize() const {
