@@ -10,7 +10,7 @@ set(HEADER_FILES
         dispatcher/DispatcherConfigImpl.h
         dispatcher/DispatcherConfig.h
         ../include/qvm/ParameterMetadata.h
-        io/command/CommandFileReaderV1.h
+        io/command/ProgramFileReaderV1.h
         app/Options.h
         app/SharedMemoryApplication.h
         utils/utils.h)
@@ -21,7 +21,7 @@ set(SOURCE_FILES
         interpreter/InterpreterImpl.cpp
         dispatcher/Dispatcher.cpp
         dispatcher/DispatcherConfigImpl.cpp
-        io/command/CommandFileReaderV1.cpp
+        io/command/ProgramFileReaderV1.cpp
         app/Options.cpp
         app/SharedMemoryApplication.cpp
         io/data/CsvDataReader.cpp io/data/CsvDataReader.h utils/utils.cpp)

@@ -1,5 +1,5 @@
-#ifndef VM_VMOPTIONS_H
-#define VM_VMOPTIONS_H
+#ifndef QVM_OPTIONS_H
+#define QVM_OPTIONS_H
 
 #include <boost/filesystem/path.hpp>
 #include <boost/program_options.hpp>

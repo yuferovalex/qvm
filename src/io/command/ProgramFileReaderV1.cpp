@@ -1,8 +1,8 @@
 #include <cstdint>
 #include <cstring>
 
-#include "qvm/Command.h"
-#include "CommandFileReaderV1.h"
+#include "qvm/ProgramFile.h"
+#include "ProgramFileReaderV1.h"
 
 using namespace ProgramFileV1;
 
@@ -19,13 +19,13 @@ namespace {
     }
 }
 
-CommandFileReaderV1::CommandFileReaderV1(const std::string &filePath) {
+ProgramFileReaderV1::ProgramFileReaderV1(const std::string &filePath) {
     std::ifstream is(filePath, std::ios::binary);
     readHeader(is);
     readProgramMetadata(is);
 }
 
-void CommandFileReaderV1::readHeader(std::ifstream &is) {
+void ProgramFileReaderV1::readHeader(std::ifstream &is) {
     auto header = read<FileHeader>(is);
     if (header.magic != MAGIC_NUMBER) {
         throw std::runtime_error("given command is not a QVM program, or has wrong magic number");
@@ -36,7 +36,7 @@ void CommandFileReaderV1::readHeader(std::ifstream &is) {
     }
 }
 
-void CommandFileReaderV1::readProgramMetadata(std::ifstream &is) {
+void ProgramFileReaderV1::readProgramMetadata(std::ifstream &is) {
     auto metadata = read<ProgramMetadataMarshaled>(is);
     m_programDescription = metadata.description;
     m_memorySize = metadata.memorySize;
@@ -45,7 +45,7 @@ void CommandFileReaderV1::readProgramMetadata(std::ifstream &is) {
     readCommands(is, metadata.commandsCount);
 }
 
-std::vector<ParameterMetadata> CommandFileReaderV1::readParams(std::ifstream &is, size_t count) {
+std::vector<ParameterMetadata> ProgramFileReaderV1::readParams(std::ifstream &is, size_t count) {
     std::vector<ParameterMetadata> params;
     params.reserve(count);
     for (size_t i = 0; i < count; ++i) {
@@ -62,7 +62,7 @@ std::vector<ParameterMetadata> CommandFileReaderV1::readParams(std::ifstream &is
     return params;
 }
 
-Version CommandFileReaderV1::parseVersion(char *begin) {
+Version ProgramFileReaderV1::parseVersion(char *begin) {
     auto end = begin + strlen(begin);
     auto firstPoint = std::find(begin, end, '.');
     auto secondPoint = end;
@@ -83,33 +83,33 @@ Version CommandFileReaderV1::parseVersion(char *begin) {
     return version;
 }
 
-void CommandFileReaderV1::readCommands(std::ifstream &is, uint64_t commandsCount) {
+void ProgramFileReaderV1::readCommands(std::ifstream &is, uint64_t commandsCount) {
     m_commands.reserve(commandsCount);
     for (uint64_t i = 0; i < commandsCount; ++i) {
         m_commands.emplace_back(read<CommandWithHints>(is));
     }
 }
 
-std::string CommandFileReaderV1::programDescription() const {
+std::string ProgramFileReaderV1::programDescription() const {
     return m_programDescription;
 }
 
-size_t CommandFileReaderV1::memorySize() const {
+size_t ProgramFileReaderV1::memorySize() const {
     return m_memorySize;
 }
 
-CommandFileReaderV1::command_iterator CommandFileReaderV1::commandStreamBegin() const {
+ProgramFileReaderV1::command_iterator ProgramFileReaderV1::commandStreamBegin() const {
     return m_commands.cbegin();
 }
 
-CommandFileReaderV1::command_iterator CommandFileReaderV1::commandStreamEnd() const {
+ProgramFileReaderV1::command_iterator ProgramFileReaderV1::commandStreamEnd() const {
     return m_commands.cend();
 }
 
-const std::vector<ParameterMetadata> &CommandFileReaderV1::inputParamsMeta() const {
+const std::vector<ParameterMetadata> &ProgramFileReaderV1::inputParamsMeta() const {
     return m_inputParams;
 }
 
-const std::vector<ParameterMetadata> &CommandFileReaderV1::outputParamsMeta() const {
+const std::vector<ParameterMetadata> &ProgramFileReaderV1::outputParamsMeta() const {
     return m_outputParams;
 }

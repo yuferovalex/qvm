@@ -1,5 +1,5 @@
-#ifndef VM_COMMANDFILEREADERV1_H
-#define VM_COMMANDFILEREADERV1_H
+#ifndef QVM_PROGRAMFILEREADERV1_H
+#define QVM_PROGRAMFILEREADERV1_H
 
 #include <fstream>
 #include <functional>
@@ -9,11 +9,11 @@
 #include "qvm/ProgramFile.h"
 #include "qvm/ParameterMetadata.h"
 
-class CommandFileReaderV1 {
+class ProgramFileReaderV1 {
 public:
-    typedef std::vector<CommandWithHints>::const_iterator command_iterator;
+    typedef std::vector<ProgramFileV1::CommandWithHints>::const_iterator command_iterator;
 
-    explicit CommandFileReaderV1(const std::string &filePath);
+    explicit ProgramFileReaderV1(const std::string &filePath);
 
     std::string programDescription() const;
 
@@ -38,7 +38,7 @@ private:
 
     static Version parseVersion(char *begin);
 
-    std::vector<CommandWithHints> m_commands;
+    std::vector<ProgramFileV1::CommandWithHints> m_commands;
     std::vector<ParameterMetadata> m_inputParams;
     std::vector<ParameterMetadata> m_outputParams;
     std::string m_programDescription;
@@ -46,4 +46,4 @@ private:
     size_t m_memorySize = 0;
 };
 
-#endif //VM_COMMANDFILEREADERV1_H
+#endif //QVM_PROGRAMFILEREADERV1_H

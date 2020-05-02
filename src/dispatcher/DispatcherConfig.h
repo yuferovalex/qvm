@@ -1,5 +1,5 @@
-#ifndef VM_DISPATCHERCONFIG_H
-#define VM_DISPATCHERCONFIG_H
+#ifndef QVM_DISPATCHERCONFIG_H
+#define QVM_DISPATCHERCONFIG_H
 
 #include <cstdint>
 #include <memory>
@@ -31,4 +31,4 @@ public:
     virtual std::unique_ptr<Interpreter> createInterpreter() = 0;
 };
 
-#endif //VM_DISPATCHERCONFIG_H
+#endif //QVM_DISPATCHERCONFIG_H

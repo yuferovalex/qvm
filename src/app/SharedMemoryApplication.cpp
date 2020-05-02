@@ -12,7 +12,7 @@
 #include "dispatcher/DispatcherConfigImpl.h"
 #include "dispatcher/Dispatcher.h"
 #include "interpreter/CommandHandlersImpl.h"
-#include "io/command/CommandFileReaderV1.h"
+#include "io/command/ProgramFileReaderV1.h"
 #include "io/data/CsvDataReader.h"
 #include "memory/SharedMemory.h"
 #include "utils/utils.h"
@@ -40,7 +40,7 @@ int SharedMemoryApplication::run() {
         auto programPath = options.programPath();
         validateProgramOption(programPath);
 
-        CommandFileReaderV1 programReader(programPath.string());
+        ProgramFileReaderV1 programReader(programPath.string());
 
         options.parseParams(programReader.inputParamsMeta(), programReader.outputParamsMeta());
 
@@ -89,7 +89,7 @@ void SharedMemoryApplication::validateProgramOption(const boost::filesystem::pat
     }
 }
 
-void SharedMemoryApplication::printProgramInfo(CommandFileReaderV1 &reader) {
+void SharedMemoryApplication::printProgramInfo(ProgramFileReaderV1 &reader) {
     std::cout << "Program description:" << std::endl
               << reader.programDescription() << std::endl << std::endl
               << buildParamOptions(reader.inputParamsMeta(), "Input parameters") << std::endl

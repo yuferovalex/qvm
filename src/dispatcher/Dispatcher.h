@@ -1,5 +1,5 @@
-#ifndef VM_DISPATCHER_H
-#define VM_DISPATCHER_H
+#ifndef QVM_DISPATCHER_H
+#define QVM_DISPATCHER_H
 
 #include <atomic>
 #include <queue>
@@ -90,4 +90,4 @@ private:
     std::unique_ptr<DispatcherConfig> m_config;
 };
 
-#endif //VM_DISPATCHER_H
+#endif //QVM_DISPATCHER_H

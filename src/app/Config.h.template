@@ -1,5 +1,5 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef QVM_CONFIG_H
+#define QVM_CONFIG_H
 
 #define PROJECT_NAME      "@PROJECT_NAME@"
 #define PROJECT_VER       "@PROJECT_VERSION@"
@@ -7,4 +7,4 @@
 #define PROJECT_VER_MINOR "@PROJECT_VERSION_MINOR@"
 #define PROJECT_VER_PATCH "@PROJECT_VERSION_PATCH@"
 
-#endif //CONFIG_H
+#endif //QVM_CONFIG_H

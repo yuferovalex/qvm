@@ -1,5 +1,5 @@
-#ifndef VM_SHAREDMEMORY_H
-#define VM_SHAREDMEMORY_H
+#ifndef QVM_SHAREDMEMORY_H
+#define QVM_SHAREDMEMORY_H
 
 #include <atomic>
 #include <vector>

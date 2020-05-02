@@ -1,5 +1,5 @@
-#ifndef VM_MEMORY_H
-#define VM_MEMORY_H
+#ifndef QVM_MEMORY_H
+#define QVM_MEMORY_H
 
 #include <optional>
 
@@ -26,4 +26,4 @@ public:
     virtual void setValue(Command::Reference ref, Command::Value value) = 0;
 };
 
-#endif //VM_MEMORY_H
+#endif //QVM_MEMORY_H

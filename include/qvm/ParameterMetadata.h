@@ -1,5 +1,5 @@
-#ifndef VM_PARAMMETA_H
-#define VM_PARAMMETA_H
+#ifndef QVM_PARAMETERMETADATA_H
+#define QVM_PARAMETERMETADATA_H
 
 #include <cstdint>
 #include <string>
@@ -44,4 +44,4 @@ public:
     }
 };
 
-#endif //VM_PARAMMETA_H
+#endif //QVM_PARAMETERMETADATA_H

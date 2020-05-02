@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "io/command/CommandFileReaderV1.h"
+#include "io/command/ProgramFileReaderV1.h"
 
 #include "test-utils/PseudoAssemblerLanguage.h"
 
@@ -9,7 +9,7 @@
  * программы, составленной вручную.
  */
 TEST(command_file_reader_v1, test) {
-    CommandFileReaderV1 reader("io/command/product2x2.qvm");
+    ProgramFileReaderV1 reader("io/command/product2x2.qvm");
 
     EXPECT_EQ(20, reader.memorySize());
     EXPECT_EQ("Calculates 2-nd order matrix product.", reader.programDescription());

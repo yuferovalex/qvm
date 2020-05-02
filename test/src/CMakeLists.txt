@@ -14,7 +14,7 @@ add_executable(qvm_tests
         interpreter/command_handlers_tests.cpp
         memory/shared_memory_test.cpp
         dispatcher/dispatcher_test.cpp
-        io/command/command_file_reader_v1_test.cpp
+        io/command/program_file_reader_v1_test.cpp
         io/data/csv_data_reader_test.cpp app/options_test.cpp)
 
 target_link_libraries(qvm_tests gtest gtest_main gmock gmock_main)

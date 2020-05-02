@@ -1,11 +1,11 @@
-#ifndef VM_APPLICATION_H
-#define VM_APPLICATION_H
+#ifndef QVM_SHAREDMEMORYAPPLICATION_H
+#define QVM_SHAREDMEMORYAPPLICATION_H
 
 #include <boost/filesystem/path.hpp>
 
 #include "qvm/ParameterMetadata.h"
 
-class CommandFileReaderV1;
+class ProgramFileReaderV1;
 
 class SharedMemoryApplication {
 public:
@@ -14,11 +14,11 @@ public:
 
 private:
     static void validateProgramOption(const boost::filesystem::path &programPath);
-    static void printProgramInfo(CommandFileReaderV1 &reader);
+    static void printProgramInfo(ProgramFileReaderV1 &reader);
 
     int m_argc;
     const char **m_argv;
 };
 
 
-#endif //VM_APPLICATION_H
+#endif //QVM_SHAREDMEMORYAPPLICATION_H

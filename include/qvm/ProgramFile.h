@@ -1,5 +1,5 @@
-#ifndef PROGRAM_FILE_H
-#define PROGRAM_FILE_H
+#ifndef QVM_PROGRAMFILE_H
+#define QVM_PROGRAMFILE_H
 
 #include <qvm/Command.h>
 
@@ -111,6 +111,14 @@ namespace ProgramFileV1 {
 
     static_assert(sizeof(ParameterMetadataMarshaled) == 128,
                   "The size of struct ParameterMetadataMarshaled must be 128 bytes");
+
+    /**
+     * Команда с подсказками для диспетчера задач ВМ.
+     */
+    struct alignas(64) CommandWithHints : Command {
+    };
+
+    static_assert(sizeof(CommandWithHints) == 64, "The size of struct CommandWithHints must be 64 bytes");
 }
 
-#endif //PROGRAM_FILE_H
+#endif //QVM_PROGRAMFILE_H

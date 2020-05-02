@@ -1,5 +1,5 @@
-#ifndef VM_DISPATCHERCONFIGIMPL_H
-#define VM_DISPATCHERCONFIGIMPL_H
+#ifndef QVM_DISPATCHERCONFIGIMPL_H
+#define QVM_DISPATCHERCONFIGIMPL_H
 
 #include <cstdint>
 #include <thread>
