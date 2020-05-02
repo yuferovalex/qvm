@@ -6,6 +6,7 @@
 #include <utility>
 #include <iterator>
 
+#include "qvm/ProgramFile.h"
 #include "qvm/ParameterMetadata.h"
 
 class CommandFileReaderV1 {
@@ -27,15 +28,6 @@ public:
     command_iterator commandStreamEnd() const;
 
 private:
-    /**
-     * Версия протокола файла программы.
-     */
-    struct Version {
-        unsigned major = 0;
-        unsigned minor = 0;
-        unsigned bugFix = 0;
-    };
-
     void readHeader(std::ifstream &is);
 
     void readProgramMetadata(std::ifstream &is);
