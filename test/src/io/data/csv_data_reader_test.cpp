@@ -26,7 +26,7 @@ namespace {
             memory = std::make_unique<MockMemory>();
             provider = std::make_unique<MockParametersPathProvider>();
 
-            meta = ParamMeta();
+            meta = ParameterMetadata();
             meta.name = "a";
             meta.address = 1;
             meta.rows = 2;
@@ -42,7 +42,7 @@ namespace {
         std::unique_ptr<MockMemory> memory;
         std::unique_ptr<MockParametersPathProvider> provider;
         boost::filesystem::path testInputFilePath = "io/data/input.csv";
-        ParamMeta meta;
+        ParameterMetadata meta;
     };
 }
 

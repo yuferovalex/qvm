@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 #include "interpreter/CommandHandler.h"
 
 /**

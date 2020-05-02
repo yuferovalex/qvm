@@ -3,7 +3,7 @@
 
 #include <optional>
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 
 class Memory {
 public:

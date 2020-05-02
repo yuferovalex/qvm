@@ -3,7 +3,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 #include "interpreter/InterpreterImpl.h"
 #include "interpreter/CommandHandler.h"
 #include "memory/Memory.h"

@@ -1,4 +1,7 @@
-include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR} ${gmock_SOURCE_DIR}/include ${gmock_SOURCE_DIR})
+include_directories(${gtest_SOURCE_DIR}/include)
+include_directories(${gtest_SOURCE_DIR})
+include_directories(${gmock_SOURCE_DIR}/include)
+include_directories(${gmock_SOURCE_DIR})
 
 add_definitions(-DQVM_TEST_MODE)
 

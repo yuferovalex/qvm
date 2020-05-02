@@ -1,7 +1,7 @@
 #ifndef VM_PSEUDOASSEMBLERLANGUAGE_H
 #define VM_PSEUDOASSEMBLERLANGUAGE_H
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 
 #define QVM_ASM_BEGIN(type) []() { auto program = type; Command command;
 

@@ -3,7 +3,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include "io/ParamMeta.h"
+#include "qvm/ParameterMetadata.h"
 
 class CommandFileReaderV1;
 

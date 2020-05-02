@@ -5,7 +5,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include "io/ParamMeta.h"
+#include "qvm/ParameterMetadata.h"
 #include "memory/Memory.h"
 
 class ParametersPathProvider;
@@ -14,12 +14,12 @@ class CsvDataReader {
 public:
     enum { DEFAULT_DELIMITER = ';' };
     explicit CsvDataReader(Memory &memory, ParametersPathProvider &parametersPathProvider);
-    void readInput(const std::vector<ParamMeta> &input);
-    void writeOutput(const std::vector<ParamMeta> &output);
+    void readInput(const std::vector<ParameterMetadata> &input);
+    void writeOutput(const std::vector<ParameterMetadata> &output);
 
 private:
-    void readMatrix(std::istream &istream, const ParamMeta &meta);
-    void writeMatrix(std::ostream &ostream, const ParamMeta &meta);
+    void readMatrix(std::istream &istream, const ParameterMetadata &meta);
+    void writeMatrix(std::ostream &ostream, const ParameterMetadata &meta);
 
     Memory &m_memory;
     ParametersPathProvider &m_parametersPathProvider;

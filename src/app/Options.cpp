@@ -82,7 +82,7 @@ boost::filesystem::path Options::param(const std::string &name, bool requiredExi
     return path;
 }
 
-void Options::parseParams(const std::vector<ParamMeta> &input, const std::vector<ParamMeta> &output) {
+void Options::parseParams(const std::vector<ParameterMetadata> &input, const std::vector<ParameterMetadata> &output) {
     m_optionsDescription
             .add(buildParamOptions(input, "Input params"))
             .add(buildParamOptions(output, "Output params"));

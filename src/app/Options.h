@@ -38,7 +38,7 @@ public:
 
     void showOptionsDescription();
 
-    void parseParams(const std::vector<ParamMeta> &input, const std::vector<ParamMeta> &output);
+    void parseParams(const std::vector<ParameterMetadata> &input, const std::vector<ParameterMetadata> &output);
 
 private:
     void fillOptionsDescription();

@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <cstring>
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 #include "CommandFileReaderV1.h"
 
 namespace {
@@ -143,13 +143,13 @@ void CommandFileReaderV1::readProgramMetadata(std::ifstream &is) {
     readCommands(is, metadata.commandsCount);
 }
 
-std::vector<ParamMeta> CommandFileReaderV1::readParams(std::ifstream &is, size_t count) {
-    std::vector<ParamMeta> params;
+std::vector<ParameterMetadata> CommandFileReaderV1::readParams(std::ifstream &is, size_t count) {
+    std::vector<ParameterMetadata> params;
     params.reserve(count);
     for (size_t i = 0; i < count; ++i) {
         auto marshaled = read<ParameterMetadataMarshaled>(is);
 
-        ParamMeta meta;
+        ParameterMetadata meta;
         meta.name = marshaled.name;
         meta.description = marshaled.description;
         meta.address = marshaled.memoryAddress;
@@ -204,10 +204,10 @@ CommandFileReaderV1::command_iterator CommandFileReaderV1::commandStreamEnd() co
     return m_commands.cend();
 }
 
-const std::vector<ParamMeta> &CommandFileReaderV1::inputParamsMeta() const {
+const std::vector<ParameterMetadata> &CommandFileReaderV1::inputParamsMeta() const {
     return m_inputParams;
 }
 
-const std::vector<ParamMeta> &CommandFileReaderV1::outputParamsMeta() const {
+const std::vector<ParameterMetadata> &CommandFileReaderV1::outputParamsMeta() const {
     return m_outputParams;
 }

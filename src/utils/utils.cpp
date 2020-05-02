@@ -3,7 +3,7 @@
 #include <boost/filesystem/path.hpp>
 
 boost::program_options::options_description
-buildParamOptions(const std::vector<ParamMeta> &params, const std::string &caption) {
+buildParamOptions(const std::vector<ParameterMetadata> &params, const std::string &caption) {
     boost::program_options::options_description description(caption);
     for (const auto& param : params) {
         description.add_options()

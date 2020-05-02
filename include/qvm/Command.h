@@ -84,4 +84,12 @@ struct Command {
 // Команда должна помещаться в кеш-линию
 static_assert(64 % sizeof(Command) == 0, "Command should place into cache-line");
 
+/**
+ * Команда с подсказками для диспетчера задач ВМ.
+ */
+struct alignas(64) CommandWithHints : Command {
+};
+
+static_assert(sizeof(CommandWithHints) == 64, "The size of struct CommandWithHints must be 64 bytes");
+
 #endif //VM_COMMAND_H

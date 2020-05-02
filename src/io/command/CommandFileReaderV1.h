@@ -6,18 +6,10 @@
 #include <utility>
 #include <iterator>
 
-#include "io/ParamMeta.h"
+#include "qvm/ParameterMetadata.h"
 
 class CommandFileReaderV1 {
 public:
-    /**
-     * Команда с подсказками для диспетчера задач ВМ.
-     */
-    struct alignas(64) CommandWithHints : Command {
-    };
-
-    static_assert(sizeof(CommandWithHints) == 64, "The size of struct CommandWithHints must be 64 bytes");
-
     typedef std::vector<CommandWithHints>::const_iterator command_iterator;
 
     explicit CommandFileReaderV1(const std::string &filePath);
@@ -26,9 +18,9 @@ public:
 
     size_t memorySize() const;
 
-    const std::vector<ParamMeta> &inputParamsMeta() const;
+    const std::vector<ParameterMetadata> &inputParamsMeta() const;
 
-    const std::vector<ParamMeta> &outputParamsMeta() const;
+    const std::vector<ParameterMetadata> &outputParamsMeta() const;
 
     command_iterator commandStreamBegin() const;
 
@@ -50,13 +42,13 @@ private:
 
     void readCommands(std::ifstream &is, uint64_t commandsCount);
 
-    static std::vector<ParamMeta> readParams(std::ifstream &is, size_t count);
+    static std::vector<ParameterMetadata> readParams(std::ifstream &is, size_t count);
 
     static Version parseVersion(char *begin);
 
     std::vector<CommandWithHints> m_commands;
-    std::vector<ParamMeta> m_inputParams;
-    std::vector<ParamMeta> m_outputParams;
+    std::vector<ParameterMetadata> m_inputParams;
+    std::vector<ParameterMetadata> m_outputParams;
     std::string m_programDescription;
     Version m_version{};
     size_t m_memorySize = 0;

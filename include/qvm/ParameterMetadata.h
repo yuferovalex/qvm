@@ -4,12 +4,12 @@
 #include <cstdint>
 #include <string>
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 
 /**
  * Метаданные входных и выходных параметров.
  */
-class ParamMeta {
+class ParameterMetadata {
 public:
     /**
      * Наименование параметра.

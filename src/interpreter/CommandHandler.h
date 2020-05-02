@@ -1,7 +1,7 @@
 #ifndef VM_COMMANDHANDLER_H
 #define VM_COMMANDHANDLER_H
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 
 class Memory;
 

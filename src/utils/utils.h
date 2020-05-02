@@ -3,9 +3,9 @@
 
 #include <boost/program_options/options_description.hpp>
 
-#include "io/ParamMeta.h"
+#include "qvm/ParameterMetadata.h"
 
 boost::program_options::options_description
-buildParamOptions(const std::vector<ParamMeta> &params, const std::string &caption = std::string());
+buildParamOptions(const std::vector<ParameterMetadata> &params, const std::string &caption = std::string());
 
 #endif //QVM_UTILS_H

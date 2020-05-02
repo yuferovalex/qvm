@@ -3,7 +3,7 @@
 
 #include <boost/circular_buffer.hpp>
 
-#include "interpreter/Command.h"
+#include "qvm/Command.h"
 
 /**
  * Интерфейс интерпретатора байт кода ВМ.

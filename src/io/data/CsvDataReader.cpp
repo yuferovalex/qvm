@@ -7,7 +7,7 @@ CsvDataReader::CsvDataReader(Memory &memory, ParametersPathProvider &parametersP
     : m_memory(memory), m_parametersPathProvider(parametersPathProvider)
 {}
 
-void CsvDataReader::readInput(const std::vector<ParamMeta> &input) {
+void CsvDataReader::readInput(const std::vector<ParameterMetadata> &input) {
     for (const auto &meta : input) {
         auto path = m_parametersPathProvider.param(meta.name, true);
         std::ifstream istream(path.string());
@@ -15,7 +15,7 @@ void CsvDataReader::readInput(const std::vector<ParamMeta> &input) {
     }
 }
 
-void CsvDataReader::writeOutput(const std::vector<ParamMeta> &output) {
+void CsvDataReader::writeOutput(const std::vector<ParameterMetadata> &output) {
     for (const auto &meta : output) {
         auto path = m_parametersPathProvider.param(meta.name, false);
         std::ofstream ostream(path.string());
@@ -23,7 +23,7 @@ void CsvDataReader::writeOutput(const std::vector<ParamMeta> &output) {
     }
 }
 
-void CsvDataReader::readMatrix(std::istream &istream, const ParamMeta &meta) {
+void CsvDataReader::readMatrix(std::istream &istream, const ParameterMetadata &meta) {
     Command::Reference pointer = meta.address;
     for (size_t i = 0; i < meta.rows; ++i) {
         std::string line;
@@ -45,7 +45,7 @@ void CsvDataReader::readMatrix(std::istream &istream, const ParamMeta &meta) {
     }
 }
 
-void CsvDataReader::writeMatrix(std::ostream &ostream, const ParamMeta &meta) {
+void CsvDataReader::writeMatrix(std::ostream &ostream, const ParameterMetadata &meta) {
     Command::Reference pointer = meta.address;
     for (size_t i = 0; i < meta.rows; ++i) {
         for (size_t j = 0; j < meta.columns; ++j) {
