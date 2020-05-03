@@ -30,7 +30,7 @@ namespace {
             meta.name = "a";
             meta.address = 1;
             meta.rows = 2;
-            meta.columns = 3;
+            meta.columns = 2;
         }
 
         void TearDown() override {
@@ -41,7 +41,7 @@ namespace {
 
         std::unique_ptr<MockMemory> memory;
         std::unique_ptr<MockParametersPathProvider> provider;
-        boost::filesystem::path testInputFilePath = "io/data/input.csv";
+        boost::filesystem::path testInputFilePath = "resources/input.csv";
         ParameterMetadata meta;
     };
 }
@@ -63,7 +63,7 @@ TEST_F(CsvDataReaderTest, write_output) {
     CsvDataReader reader(*memory, *provider);
 
     EXPECT_CALL(*provider, param(meta.name, false))
-            .WillOnce(Return(boost::filesystem::path("io/data/output.csv")));
+            .WillOnce(Return(boost::filesystem::path("output.csv")));
 
     for (int i = 1; i <= meta.size(); ++i) {
         EXPECT_CALL(*memory, value(i)).WillOnce(Return(Command::Value((double) i)));
@@ -71,11 +71,11 @@ TEST_F(CsvDataReaderTest, write_output) {
 
     EXPECT_NO_THROW(reader.writeOutput(std::vector{meta}));
 
-    std::ifstream outputFile("io/data/output.csv");
+    std::ifstream outputFile("output.csv");
     std::string actualOutput{std::istreambuf_iterator<char>(outputFile), std::istreambuf_iterator<char>()};
 
-    std::string expectedOutput = "1;2;3;\n"
-                                 "4;5;6;\n"
+    std::string expectedOutput = "1;2;\n"
+                                 "3;4;\n"
                                  "";
     EXPECT_EQ(expectedOutput, actualOutput);
 }
