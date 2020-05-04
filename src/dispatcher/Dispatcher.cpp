@@ -1,17 +1,17 @@
 #include "dispatcher/Dispatcher.h"
 
-Dispatcher::Dispatcher(std::unique_ptr<DispatcherConfig> &&config)
-    : m_config(std::move(config))
+Dispatcher::Dispatcher(DispatcherConfig &config)
+    : m_config(config)
     , m_dispatchingFinished(false)
 {}
 
 std::vector<std::thread> Dispatcher::createThreads() {
     m_dispatchingFinished = false;
-    size_t threadCount = m_config->threadCount();
+    size_t threadCount = m_config.threadCount();
     std::vector<std::thread> threads(threadCount);
     for (size_t i = 0; i < threadCount; ++i) {
         auto thread = std::thread([&]() {
-            auto interpreter = m_config->createInterpreter();
+            auto interpreter = m_config.createInterpreter();
             while (handleNextBatch(*interpreter));
         });
 
@@ -41,6 +41,6 @@ bool Dispatcher::handleNextBatch(Interpreter &interpreter) {
         queue = std::move(m_batches.front());
         m_batches.pop();
     }
-    interpreter.interpret(std::move(queue));
-    return true;
+    interpreter.interpret(std::move(queue), m_cancel);
+    return !m_cancel;
 }

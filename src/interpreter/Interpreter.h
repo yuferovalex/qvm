@@ -1,9 +1,11 @@
-#ifndef VM_INTERPRETER_H
-#define VM_INTERPRETER_H
+#ifndef QVM_INTERPRETER_H
+#define QVM_INTERPRETER_H
 
 #include <boost/circular_buffer.hpp>
 
 #include "qvm/Command.h"
+
+class CancellationToken;
 
 /**
  * Интерфейс интерпретатора байт кода ВМ.
@@ -22,7 +24,7 @@ public:
      *
      * @param commands Очередь команд.
      */
-    virtual void interpret(CommandQueue &&commands) = 0;
+    virtual void interpret(CommandQueue &&commands, CancellationToken &cancel) = 0;
 };
 
-#endif //VM_INTERPRETER_H
+#endif //QVM_INTERPRETER_H

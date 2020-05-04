@@ -34,6 +34,10 @@ public:
         return m_showProgramInfo;
     }
 
+    bool trackExecutionTime() const {
+        return m_trackExecutionTime;
+    }
+
     boost::filesystem::path param(const std::string &name, bool requiredExists) const override;
 
     void showOptionsDescription();
@@ -54,6 +58,7 @@ private:
     bool m_help;
     bool m_version;
     bool m_showProgramInfo;
+    bool m_trackExecutionTime;
 };
 
 #endif //VM_VMOPTIONS_H

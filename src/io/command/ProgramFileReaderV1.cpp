@@ -3,6 +3,7 @@
 
 #include "qvm/ProgramFile.h"
 #include "ProgramFileReaderV1.h"
+#include "memory/StringVault.h"
 
 using namespace ProgramFileV1;
 
@@ -19,8 +20,10 @@ namespace {
     }
 }
 
-ProgramFileReaderV1::ProgramFileReaderV1(const std::string &filePath) {
-    std::ifstream is(filePath, std::ios::binary);
+ProgramFileReaderV1::ProgramFileReaderV1(const boost::filesystem::path &filePath, StringVault &stringVault)
+    : m_stringVault(stringVault)
+{
+    std::ifstream is(filePath.string(), std::ios::binary);
     readHeader(is);
     readProgramMetadata(is);
 }
@@ -43,6 +46,7 @@ void ProgramFileReaderV1::readProgramMetadata(std::ifstream &is) {
     m_inputParams = readParams(is, metadata.inputParametersCount);
     m_outputParams = readParams(is, metadata.outputParametersCount);
     readCommands(is, metadata.commandsCount);
+    readStrings(is, metadata.stringConstantsCount);
 }
 
 std::vector<ParameterMetadata> ProgramFileReaderV1::readParams(std::ifstream &is, size_t count) {
@@ -60,6 +64,28 @@ std::vector<ParameterMetadata> ProgramFileReaderV1::readParams(std::ifstream &is
         params.emplace_back(meta);
     }
     return params;
+}
+
+static std::string readString(std::ifstream &is, size_t &readBytes) {
+    std::string result;
+    for (char ch = 0; is.get(ch) && ch != '\0'; ++readBytes) {
+        result += ch;
+    }
+    return result;
+}
+
+void ProgramFileReaderV1::readStrings(std::ifstream &is, size_t count) {
+    size_t readBytes = 0;
+    for (size_t i = 0; i < count; ++i) {
+        auto string = readString(is, readBytes);
+        m_stringVault.addString(string);
+    }
+
+    // Выравниевание
+    if (readBytes != 0) {
+        std::istream_iterator<char> begin(is);
+        std::advance(begin, 16 - (readBytes & 0xFFu));
+    }
 }
 
 Version ProgramFileReaderV1::parseVersion(char *begin) {
@@ -90,7 +116,7 @@ void ProgramFileReaderV1::readCommands(std::ifstream &is, uint64_t commandsCount
     }
 }
 
-std::string ProgramFileReaderV1::programDescription() const {
+const std::string &ProgramFileReaderV1::programDescription() const {
     return m_programDescription;
 }
 

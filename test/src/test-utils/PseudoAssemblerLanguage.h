@@ -42,6 +42,9 @@
 #define CMD_GT(l, r, res)   BINARY_CMD_HELPER_(Command::Operation::GT  , l, r, res)
 #define CMD_GE(l, r, res)   BINARY_CMD_HELPER_(Command::Operation::GE  , l, r, res)
 
+#define CMD_LQT(l, r, res)  BINARY_CMD_HELPER_(Command::Operation::LQT , l, r, res)
+#define CMD_LQT_HALT(l, r)  BINARY_CMD_HELPER_(Command::Operation::LQT | Command::Flags::HALT_IF_TRUE, l, r, 0)
+
 #define QVM_ASM_END   return program; } ()
 
 #endif //QVM_PSEUDOASSEMBLERLANGUAGE_H

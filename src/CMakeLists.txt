@@ -24,7 +24,7 @@ set(SOURCE_FILES
         io/command/ProgramFileReaderV1.cpp
         app/Options.cpp
         app/SharedMemoryApplication.cpp
-        io/data/CsvDataReader.cpp io/data/CsvDataReader.h utils/utils.cpp)
+        io/data/CsvDataReader.cpp io/data/CsvDataReader.h utils/utils.cpp utils/CancellationToken.h memory/StringVault.h memory/LocalStringVault.cpp memory/LocalStringVault.h utils/Timer.h)
 
 add_library(qvm_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(qvm_lib ${Boost_LIBRARIES} Threads::Threads)

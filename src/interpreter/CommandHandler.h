@@ -1,9 +1,11 @@
-#ifndef VM_COMMANDHANDLER_H
-#define VM_COMMANDHANDLER_H
+#ifndef QVM_COMMANDHANDLER_H
+#define QVM_COMMANDHANDLER_H
 
 #include "qvm/Command.h"
 
 class Memory;
+class CancellationToken;
+class StringVault;
 
 /**
  * Интерфейс обработчика команды интерпретатора ВМ.
@@ -13,6 +15,31 @@ public:
     virtual ~CommandHandler() = default;
 
     /**
+     * Аргументы для исполнителей команд.
+     */
+    struct ExecuteArgs {
+        /**
+         * Команда, которую необходимо выполнить.
+         */
+        const Command *cmd;
+
+        /**
+         * Память ВМ.
+         */
+        Memory *memory;
+
+        /**
+         * Токен отмены выполнения программы.
+         */
+        CancellationToken *cancel;
+
+        /**
+         * Хранилище строк.
+         */
+        StringVault *stringVault;
+    };
+
+    /**
      * Операция, за которую отвечает обработчик.
      */
     virtual Command::Operation operation() const = 0;
@@ -20,11 +47,11 @@ public:
     /**
      * Выполнить команду.
      *
-     * @param memory Память ВМ.
-     * @param cmd    Команда, которую необходимо выполнить.
-     * @return Возвращает ИСТИНУ, если все необходимые аргументы были готовы к моменту исполнения, ЛОЖЬ - иначе.
+     * @param ExecuteArgs аргументы для выполнения.
+     * @return Возвращает ИСТИНУ, если все необходимые аргументы были готовы
+     *         к моменту исполнения, ЛОЖЬ - иначе.
      */
-    virtual bool execute(Memory &memory, const Command &cmd) = 0;
+    virtual bool execute(ExecuteArgs &args) = 0;
 };
 
-#endif //VM_COMMANDHANDLER_H
+#endif //QVM_COMMANDHANDLER_H

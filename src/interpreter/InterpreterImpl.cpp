@@ -1,29 +1,35 @@
 #include "interpreter/CommandHandler.h"
 #include "interpreter/InterpreterImpl.h"
+#include "utils/CancellationToken.h"
 
-std::array<std::unique_ptr<CommandHandler>, Command::Operation::COUNT> InterpreterImpl::m_commands {};
+std::array<std::unique_ptr<CommandHandler>, Command::Operation::COUNT> InterpreterImpl::m_commands{};
+
+static inline uint32_t cmdIndex(uint32_t operation) {
+    return operation >> (8u * 3u);
+}
 
 void InterpreterImpl::registerCommandHandler(std::unique_ptr<CommandHandler> &&handler) {
-    auto index = handler->operation() >> 8 * 3;
+    auto index = cmdIndex(handler->operation());
     m_commands[index] = std::move(handler);
 }
 
 void InterpreterImpl::unregisterCommandHandler(Command::Operation operation) {
-    auto index = operation >> 8 * 3;
+    auto index = cmdIndex(operation);
     m_commands[index].reset();
 }
 
-InterpreterImpl::InterpreterImpl(Memory &memory)
-    : m_memory(memory)
-{}
+InterpreterImpl::InterpreterImpl(Memory &memory, StringVault &stringVault)
+        : m_memory(memory), m_stringVault(stringVault) {}
 
-void InterpreterImpl::interpret(CommandQueue &&commands) {
-    while (!commands.empty()) {
+void InterpreterImpl::interpret(CommandQueue &&commands, CancellationToken &cancel) {
+    CommandHandler::ExecuteArgs args{nullptr, &m_memory, &cancel, &m_stringVault};
+    while (!cancel && !commands.empty()) {
         auto &&currentCommand = commands.front();
         commands.pop_front();
 
-        auto operation = currentCommand.operation >> 8 * 3;
-        auto result = m_commands[operation]->execute(m_memory, currentCommand);
+        auto operation = cmdIndex(currentCommand.operation);
+        args.cmd = &currentCommand;
+        auto result = m_commands[operation]->execute(args);
         if (!result) {
             commands.push_back(currentCommand);
         }

@@ -41,8 +41,10 @@ struct Command {
      * Флаги.
      */
     enum Flags : uint32_t {
-        LHS_OP_REF = 0x00000001, /**< Левый операнд - ссылка  */
-        RHS_OP_REF = 0x00000002, /**< Правый операнд - ссылка */
+        LHS_OP_REF   = 0x00000001, /**< Левый операнд - ссылка  */
+        RHS_OP_REF   = 0x00000002, /**< Правый операнд - ссылка */
+        HALT_IF_TRUE = 0x00000004, /**< Флаг, указывающий команде LQT,
+                                        что необходимо прервать выполнение программы */
     };
 
     /**
@@ -56,10 +58,12 @@ struct Command {
     union Value {
         double number;
         bool   boolean;
+        uint32_t stringIndex;
 
         Value() = default;
         explicit Value(double number) : number(number) {}
         explicit Value(bool boolean) : boolean(boolean) {}
+        explicit Value(uint32_t stringIndex) : stringIndex(stringIndex) {}
     };
 
     /**

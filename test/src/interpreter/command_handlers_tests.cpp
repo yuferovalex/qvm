@@ -6,11 +6,22 @@
 
 #include "interpreter/CommandHandlersImpl.h"
 #include "memory/Memory.h"
+#include "memory/StringVault.h"
+#include "utils/CancellationToken.h"
 #include "test-utils/ResultIs.h"
+#include "test-utils/PseudoAssemblerLanguage.h"
 
 using ::testing::Return;
+using ::testing::ReturnRef;
+using ::testing::_;
 
 namespace {
+
+    class MockStringVault : public StringVault {
+    public:
+        MOCK_CONST_METHOD1(string, const std::string &(uint32_t id));
+        MOCK_METHOD1(addString, uint32_t (const std::string &string));
+    };
 
     class MockMemory : public Memory {
     public:
@@ -101,7 +112,10 @@ TEST_P(CommandHandlersTest, constants) {
     EXPECT_CALL(memory, setValue(1, ResultIs(res)))
         .Times(1);
 
-    EXPECT_TRUE(handler->execute(memory, cmd));
+    CommandHandler::ExecuteArgs args { &cmd, &memory, nullptr, nullptr };
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler->execute(args));
+    });
 }
 
 /**
@@ -119,7 +133,10 @@ TEST_P(CommandHandlersTest, left_operand_is_reference_to_not_ready_value) {
     EXPECT_CALL(memory, value(Command::Reference(2)))
             .WillOnce(Return(std::nullopt));
 
-    EXPECT_FALSE(handler->execute(memory, cmd));
+    CommandHandler::ExecuteArgs args { &cmd, &memory, nullptr, nullptr };
+    EXPECT_NO_THROW({
+        EXPECT_FALSE(handler->execute(args));
+    });
 }
 
 /**
@@ -141,7 +158,10 @@ TEST_P(CommandHandlersTest, left_operand_is_reference) {
     EXPECT_CALL(memory, setValue(1, ResultIs(res)))
             .Times(1);
 
-    EXPECT_TRUE(handler->execute(memory, cmd));
+    CommandHandler::ExecuteArgs args { &cmd, &memory, nullptr, nullptr };
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler->execute(args));
+    });
 }
 
 /**
@@ -166,7 +186,10 @@ TEST_P(CommandHandlersTest, right_operand_is_reference_to_not_ready_value) {
     EXPECT_CALL(memory, value(Command::Reference(2)))
             .WillOnce(Return(std::nullopt));
 
-    EXPECT_FALSE(handler->execute(memory, cmd));
+    CommandHandler::ExecuteArgs args { &cmd, &memory, nullptr, nullptr };
+    EXPECT_NO_THROW({
+        EXPECT_FALSE(handler->execute(args));
+    });
 }
 
 /**
@@ -195,5 +218,63 @@ TEST_P(CommandHandlersTest, right_operand_is_reference) {
     EXPECT_CALL(memory, setValue(1, ResultIs(res)))
             .Times(1);
 
-    EXPECT_TRUE(handler->execute(memory, cmd));
+    CommandHandler::ExecuteArgs args { &cmd, &memory, nullptr, nullptr };
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler->execute(args));
+    });
+}
+
+TEST(CommandHandlersTest, LQT_command) {
+    auto program = QVM_ASM_BEGIN(std::vector<Command> {})
+        CMD_LQT(VAL(false), VAL(1.0), 1);
+        CMD_LQT(VAL(true), VAL(2.0), 1);
+    QVM_ASM_END;
+
+    MockMemory memory;
+    LqtCommandHandler handler;
+    CancellationToken cancel;
+    CommandHandler::ExecuteArgs args { &program[0], &memory, &cancel, nullptr };
+
+    EXPECT_CALL(memory, setValue(1, ResultIs(1.0))).Times(0);
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler.execute(args));
+    });
+    EXPECT_FALSE(cancel);
+
+    args.cmd = &program[1];
+    EXPECT_CALL(memory, setValue(1, ResultIs(2.0))).Times(1);
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler.execute(args));
+    });
+    EXPECT_FALSE(cancel);
+}
+
+TEST(CommandHandlersTest, LQT_with_halt_if_true_flag) {
+    auto program = QVM_ASM_BEGIN(std::vector<Command> {})
+        CMD_LQT_HALT(VAL(false), VAL((uint32_t) 1));
+        CMD_LQT_HALT(VAL(true), VAL((uint32_t) 2));
+    QVM_ASM_END;
+
+    MockMemory memory;
+    LqtCommandHandler handler;
+    CancellationToken cancel;
+    MockStringVault stringVault;
+    CommandHandler::ExecuteArgs args { &program[0], &memory, &cancel, &stringVault };
+    std::string expectedString = "expected string";
+
+    EXPECT_CALL(memory, value(_)).Times(0);
+    EXPECT_CALL(memory, setValue(_, _)).Times(0);
+
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler.execute(args));
+    });
+    EXPECT_FALSE(cancel);
+
+    args.cmd = &program[1];
+    EXPECT_CALL(stringVault, string(2)).WillRepeatedly(ReturnRef(expectedString));
+    EXPECT_NO_THROW({
+        EXPECT_TRUE(handler.execute(args));
+    });
+    EXPECT_TRUE(cancel);
+    EXPECT_EQ(expectedString, cancel.reason());
 }

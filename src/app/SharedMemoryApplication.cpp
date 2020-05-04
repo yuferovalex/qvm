@@ -15,6 +15,7 @@
 #include "io/command/ProgramFileReaderV1.h"
 #include "io/data/CsvDataReader.h"
 #include "memory/SharedMemory.h"
+#include "memory/LocalStringVault.h"
 #include "utils/utils.h"
 
 SharedMemoryApplication::SharedMemoryApplication(int argc, const char **argv)
@@ -33,14 +34,15 @@ int SharedMemoryApplication::run() {
         }
 
         if (options.isShowHelp() && options.programPath().empty()) {
-            options.showOptionsDescription();
+
             return EXIT_SUCCESS;
         }
 
         auto programPath = options.programPath();
         validateProgramOption(programPath);
 
-        ProgramFileReaderV1 programReader(programPath.string());
+        LocalStringVault stringVault;
+        ProgramFileReaderV1 programReader(programPath, stringVault);
 
         options.parseParams(programReader.inputParamsMeta(), programReader.outputParamsMeta());
 
@@ -56,13 +58,23 @@ int SharedMemoryApplication::run() {
         
         SharedMemory memory(programReader.memorySize());
         CsvDataReader dataReader(memory, options);
-        auto dispatcherConfig = std::make_unique<DispatcherConfigImpl>(memory, options.batchSize(),
+        DispatcherConfigImpl dispatcherConfig(memory, stringVault,
+                options.batchSize(),
                 options.threadCount());
-        Dispatcher dispatcher(std::move(dispatcherConfig));
+        Dispatcher dispatcher(dispatcherConfig);
 
         dataReader.readInput(programReader.inputParamsMeta());
+        m_executionTimer.start();
         dispatcher.execute(programReader.commandStreamBegin(), programReader.commandStreamEnd());
+        m_executionTimer.stop();
         dataReader.writeOutput(programReader.outputParamsMeta());
+
+        if (options.trackExecutionTime()) {
+            using std::chrono::duration_cast;
+            using std::chrono::nanoseconds;
+            auto timeElapsed = duration_cast<nanoseconds>(m_executionTimer.duration());
+            std::cout << "Execution time: " << timeElapsed.count() << "ns" << std::endl;
+        }
 
         return EXIT_SUCCESS;
     }

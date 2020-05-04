@@ -8,6 +8,7 @@
 #include "dispatcher/DispatcherConfig.h"
 
 class Memory;
+class StringVault;
 
 /**
  * Реализация конфигурации диспетчера ВМ.
@@ -17,7 +18,8 @@ public:
     static const size_t DEFAULT_THREAD_COUNT;
     static const size_t DEFAULT_BATCH_SIZE;
 
-    explicit DispatcherConfigImpl(Memory &memory, size_t batchSize = DEFAULT_BATCH_SIZE,
+    explicit DispatcherConfigImpl(Memory &memory, StringVault &stringVault,
+            size_t batchSize = DEFAULT_BATCH_SIZE,
             size_t threadCount = DEFAULT_THREAD_COUNT);
 
     size_t batchSize() const final;
@@ -28,6 +30,7 @@ public:
 
 private:
     Memory &m_memory;
+    StringVault &m_stringVault;
     size_t m_batchSize;
     size_t m_threadCount;
 };

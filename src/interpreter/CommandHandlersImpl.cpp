@@ -1,11 +1,19 @@
 #include "interpreter/CommandHandlersImpl.h"
 #include "interpreter/InterpreterImpl.h"
 #include "memory/Memory.h"
+#include "memory/StringVault.h"
+#include "utils/CancellationToken.h"
 
 #define REGISTER_HANDLER(handler) \
     InterpreterImpl::registerCommandHandler(std::make_unique< handler >())
 
 void registerCommandHandlers() {
+    static bool isInit = false;
+    if (isInit) {
+        return;
+    }
+    isInit = true;
+
     REGISTER_HANDLER(AddCommandHandler);
     REGISTER_HANDLER(SubCommandHandler);
     REGISTER_HANDLER(MulCommandHandler);
@@ -23,6 +31,7 @@ void registerCommandHandlers() {
     REGISTER_HANDLER(LeCommandHandler);
     REGISTER_HANDLER(GtCommandHandler);
     REGISTER_HANDLER(GeCommandHandler);
+    REGISTER_HANDLER(LqtCommandHandler);
 }
 
 template <typename Impl>
@@ -32,151 +41,181 @@ template <typename Impl>
 bool executeUnaryOperation(Memory &memory, const Command &command, Impl &&impl);
 
 
-bool AddCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool AddCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number + rhs.number };
     });
 }
 
-bool SubCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool SubCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number - rhs.number };
     });
 }
 
-bool MulCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool MulCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number * rhs.number };
     });
 }
 
-bool DivCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool DivCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number / rhs.number };
     });
 }
 
-bool AbsCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeUnaryOperation(memory, cmd, [](Command::Value lhs) {
+bool AbsCommandHandler::execute(ExecuteArgs &args) {
+    return executeUnaryOperation(*args.memory, *args.cmd, [](Command::Value lhs) {
         return Command::Value { std::abs(lhs.number) };
     });
 }
 
-bool SqrtCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeUnaryOperation(memory, cmd, [](Command::Value lhs) {
+bool SqrtCommandHandler::execute(ExecuteArgs &args) {
+    return executeUnaryOperation(*args.memory, *args.cmd, [](Command::Value lhs) {
         return Command::Value { std::sqrt(lhs.number) };
     });
 }
 
-bool NegCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeUnaryOperation(memory, cmd, [](Command::Value lhs) {
+bool NegCommandHandler::execute(ExecuteArgs &args) {
+    return executeUnaryOperation(*args.memory, *args.cmd, [](Command::Value lhs) {
         return Command::Value { - lhs.number };
     });
 }
 
-bool NotCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeUnaryOperation(memory, cmd, [](Command::Value lhs) {
+bool NotCommandHandler::execute(ExecuteArgs &args) {
+    return executeUnaryOperation(*args.memory, *args.cmd, [](Command::Value lhs) {
         return Command::Value { ! lhs.boolean };
     });
 }
 
-bool OrCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool OrCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.boolean || rhs.boolean };
     });
 }
 
-bool AndCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool AndCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.boolean && rhs.boolean };
     });
 }
 
-bool XorCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool XorCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value {
                 (!lhs.boolean && rhs.boolean) || (lhs.boolean && !rhs.boolean)
         };
     });
 }
 
-bool EqCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool EqCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value {
             std::abs(lhs.number - rhs.number) <= std::numeric_limits<decltype(Command::Value::number)>::epsilon()
         };
     });
 }
 
-bool NeCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool NeCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value {
                 std::abs(lhs.number - rhs.number) > std::numeric_limits<decltype(Command::Value::number)>::epsilon()
         };
     });
 }
 
-bool LtCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool LtCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number < rhs.number };
     });
 }
 
-bool LeCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool LeCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number <= rhs.number };
     });
 }
 
-bool GtCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool GtCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number > rhs.number };
     });
 }
 
-bool GeCommandHandler::execute(Memory &memory, const Command &cmd) {
-    return executeBinaryOperation(memory, cmd, [](Command::Value lhs, Command::Value rhs) {
+bool GeCommandHandler::execute(ExecuteArgs &args) {
+    return executeBinaryOperation(*args.memory, *args.cmd, [](Command::Value lhs, Command::Value rhs) {
         return Command::Value { lhs.number >= rhs.number };
     });
 }
 
-template <typename Impl>
-bool executeUnaryOperation(Memory &memory, const Command &command, Impl &&impl) {
-    Command::Value operandValue = command.lhsOperand.value;
-    if (command.operation & Command::Flags::LHS_OP_REF) {
-        auto value = memory.value(command.lhsOperand.ref);
-        if (!value) {
-            return false;
+inline bool extractOperand(Memory &memory, const Command &command, Command::Value &lhs) {
+    bool result = true;
+    if (BOOST_LIKELY(command.operation & Command::Flags::LHS_OP_REF)) {
+        if (auto value = memory.value(command.lhsOperand.ref)) {
+            lhs = *value;
+            result = true;
+        } else {
+            result = false;
         }
-        operandValue = *value;
     }
+    return result;
+}
 
-    Command::Value result = impl(operandValue);
-    memory.setValue(command.resultRef, result);
-    return true;
+inline bool extractOperand(Memory &memory, const Command &command, Command::Value &lhs, Command::Value &rhs) {
+    bool result = extractOperand(memory, command, lhs);
+    if (BOOST_LIKELY(command.operation & Command::Flags::RHS_OP_REF)) {
+        if (auto value = memory.value(command.rhsOperand.ref)) {
+            rhs = *value;
+            result = true;
+        } else {
+            result = false;
+        }
+    }
+    return result;
 }
 
 template <typename Impl>
-bool executeBinaryOperation(Memory &memory, const Command &command, Impl &&impl) {
-    Command::Value lhsValue = command.lhsOperand.value;
-    if (command.operation & Command::Flags::LHS_OP_REF) {
-        auto value = memory.value(command.lhsOperand.ref);
-        if (!value) {
-            return false;
-        }
-        lhsValue = *value;
+inline bool executeUnaryOperation(Memory &memory, const Command &command, Impl &&impl) {
+    auto operandValue = command.lhsOperand.value;
+    auto operandIsReady = extractOperand(memory, command, operandValue);
+    if (operandIsReady) {
+        Command::Value result = impl(operandValue);
+        memory.setValue(command.resultRef, result);
     }
-
-    Command::Value rhsValue = command.rhsOperand.value;
-    if (command.operation & Command::Flags::RHS_OP_REF) {
-        auto value = memory.value(command.rhsOperand.ref);
-        if (!value) {
-            return false;
-        }
-        rhsValue = *value;
-    }
-
-    Command::Value result = impl(lhsValue, rhsValue);
-    memory.setValue(command.resultRef, result);
-    return true;
+    return operandIsReady;
 }
+
+template <typename Impl>
+inline bool executeBinaryOperation(Memory &memory, const Command &command, Impl &&impl) {
+    auto lhsValue = command.lhsOperand.value;
+    auto rhsValue = command.rhsOperand.value;
+    auto operandsAreReady = extractOperand(memory, command, lhsValue, rhsValue);
+    if (operandsAreReady) {
+        auto result = impl(lhsValue, rhsValue);
+        memory.setValue(command.resultRef, result);
+    }
+    return operandsAreReady;
+}
+
+bool LqtCommandHandler::execute(ExecuteArgs &args) {
+    const auto &command = *args.cmd;
+    auto &memory = *args.memory;
+    auto lhsValue = command.lhsOperand.value;
+    auto rhsValue = command.rhsOperand.value;
+    auto operandsAreReady = extractOperand(memory, command, lhsValue, rhsValue);
+    bool result = operandsAreReady;
+    if (operandsAreReady) {
+        if (lhsValue.boolean) {
+            if (BOOST_UNLIKELY(command.operation & Command::Flags::HALT_IF_TRUE)) {
+                auto reason = args.stringVault->string(rhsValue.stringIndex);
+                args.cancel->cancel(reason);
+            } else {
+                memory.setValue(command.resultRef, rhsValue);
+            }
+        }
+        result = true;
+    }
+    return result;
+}
+

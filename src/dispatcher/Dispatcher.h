@@ -11,6 +11,7 @@
 
 #include "interpreter/Interpreter.h"
 #include "dispatcher/DispatcherConfig.h"
+#include "utils/CancellationToken.h"
 
 /**
  * Диспетчер задач ВМ.
@@ -24,7 +25,7 @@ public:
      *
      * @param config Конфигурация диспетчера задач.
      */
-    explicit Dispatcher(std::unique_ptr<DispatcherConfig> &&config);
+    explicit Dispatcher(DispatcherConfig &config);
 
     /**
      * Выполнить программу.
@@ -63,7 +64,7 @@ private:
      */
     template<typename InputIterator>
     void createBatches(InputIterator &&begin, InputIterator &&end) {
-        for (auto batchSize = m_config->batchSize(); begin != end;) {
+        for (auto batchSize = m_config.batchSize(); begin != end;) {
             // Создаем пакет
             Batch batch{batchSize};
             for (size_t i = 0; i < batchSize && begin != end; i++) {
@@ -87,7 +88,8 @@ private:
     std::mutex m_batchesMutex;
     std::condition_variable m_batchesCv;
     std::atomic_bool m_dispatchingFinished;
-    std::unique_ptr<DispatcherConfig> m_config;
+    DispatcherConfig &m_config;
+    CancellationToken m_cancel;
 };
 
 #endif //QVM_DISPATCHER_H

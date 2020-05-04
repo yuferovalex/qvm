@@ -1,15 +1,26 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include "io/command/ProgramFileReaderV1.h"
+#include "memory/StringVault.h"
 
 #include "test-utils/PseudoAssemblerLanguage.h"
+
+namespace {
+    class MockStringVault : public StringVault {
+    public:
+        MOCK_CONST_METHOD1(string, const std::string &(uint32_t id));
+        MOCK_METHOD1(addString, uint32_t(const std::string &string));
+    };
+}
 
 /**
  * Тест проверяет работоспособность класса {@link CommandFileReaderV1} на примере
  * программы, составленной вручную.
  */
 TEST(command_file_reader_v1, test) {
-    ProgramFileReaderV1 reader("resources/product2x2.qvm");
+    MockStringVault stringVault;
+    ProgramFileReaderV1 reader("resources/product2x2.qvm", stringVault);
 
     EXPECT_EQ(20, reader.memorySize());
     EXPECT_EQ("Calculates 2-nd order matrix product.", reader.programDescription());

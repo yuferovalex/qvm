@@ -1,5 +1,5 @@
-#ifndef VM_COMMANDHANDLERSIMPL_H
-#define VM_COMMANDHANDLERSIMPL_H
+#ifndef QVM_COMMANDHANDLERSIMPL_H
+#define QVM_COMMANDHANDLERSIMPL_H
 
 #include <cmath>
 
@@ -18,7 +18,7 @@ class AddCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::ADD; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -29,7 +29,7 @@ class SubCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::SUB; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -40,7 +40,7 @@ class MulCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::MUL; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -51,7 +51,7 @@ class DivCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::DIV; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -62,7 +62,7 @@ class AbsCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::ABS; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -73,7 +73,7 @@ class SqrtCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::SQRT; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -84,7 +84,7 @@ class NegCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::NEG; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -95,7 +95,7 @@ class NotCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::NOT; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -106,7 +106,7 @@ class OrCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::OR; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -117,7 +117,7 @@ class AndCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::AND; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -128,7 +128,7 @@ class XorCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::XOR; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -139,7 +139,7 @@ class EqCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::EQ; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -150,7 +150,7 @@ class NeCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::NE; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -161,7 +161,7 @@ class LtCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::LT; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -172,7 +172,7 @@ class LeCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::LE; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -183,7 +183,7 @@ class GtCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::GT; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
 
@@ -194,7 +194,14 @@ class GeCommandHandler final : public CommandHandler {
 public:
     Command::Operation operation() const final { return Command::Operation::GE; }
 
-    bool execute(Memory &memory, const Command &cmd) final;
+    bool execute(ExecuteArgs &args) final;
 };
 
-#endif //VM_COMMANDHANDLERSIMPL_H
+class LqtCommandHandler final : public CommandHandler {
+public:
+    Command::Operation operation() const final { return Command::Operation::LQT; }
+
+    bool execute(ExecuteArgs &args) final;
+};
+
+#endif //QVM_COMMANDHANDLERSIMPL_H

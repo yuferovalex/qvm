@@ -48,6 +48,11 @@ void Options::fillOptionsDescription() {
                     boost::program_options::value(&m_batchSize)->default_value(DispatcherConfigImpl::DEFAULT_BATCH_SIZE),
                     "setup work batch size"
             )
+            (
+                    "timeit",
+                    boost::program_options::bool_switch(&m_trackExecutionTime)->default_value(false),
+                    "track execution time"
+            )
             ;
     m_optionsDescription.add(qvmParams);
 }

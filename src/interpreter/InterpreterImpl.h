@@ -1,5 +1,5 @@
-#ifndef VM_INTERPRETERIMPL_H
-#define VM_INTERPRETERIMPL_H
+#ifndef QVM_INTERPRETERIMPL_H
+#define QVM_INTERPRETERIMPL_H
 
 #include <array>
 #include <memory>
@@ -8,14 +8,15 @@
 
 class Memory;
 class CommandHandler;
+class StringVault;
 
 /**
  * Реализация интерпретатора байт-кода ВМ.
  */
 class InterpreterImpl : public Interpreter {
 public:
-    explicit InterpreterImpl(Memory &memory);
-    void interpret(CommandQueue &&commands) final;
+    InterpreterImpl(Memory &memory, StringVault &stringVault);
+    void interpret(CommandQueue &&commands, CancellationToken &cancel) final;
 
     /**
      * Регистрация обработчика команд.
@@ -35,6 +36,7 @@ private:
     static std::array<std::unique_ptr<CommandHandler>, Command::Operation::COUNT> m_commands;
 
     Memory &m_memory;
+    StringVault &m_stringVault;
 };
 
-#endif //VM_INTERPRETERIMPL_H
+#endif //QVM_INTERPRETERIMPL_H

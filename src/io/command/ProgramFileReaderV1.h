@@ -6,16 +6,20 @@
 #include <utility>
 #include <iterator>
 
+#include <boost/filesystem/path.hpp>
+
 #include "qvm/ProgramFile.h"
 #include "qvm/ParameterMetadata.h"
+
+class StringVault;
 
 class ProgramFileReaderV1 {
 public:
     typedef std::vector<ProgramFileV1::CommandWithHints>::const_iterator command_iterator;
 
-    explicit ProgramFileReaderV1(const std::string &filePath);
+    ProgramFileReaderV1(const boost::filesystem::path &filePath, StringVault &stringVault);
 
-    std::string programDescription() const;
+    const std::string &programDescription() const;
 
     size_t memorySize() const;
 
@@ -36,6 +40,8 @@ private:
 
     static std::vector<ParameterMetadata> readParams(std::ifstream &is, size_t count);
 
+    void readStrings(std::ifstream &is, size_t count);
+
     static Version parseVersion(char *begin);
 
     std::vector<ProgramFileV1::CommandWithHints> m_commands;
@@ -44,6 +50,7 @@ private:
     std::string m_programDescription;
     Version m_version{};
     size_t m_memorySize = 0;
+    StringVault &m_stringVault;
 };
 
 #endif //QVM_PROGRAMFILEREADERV1_H

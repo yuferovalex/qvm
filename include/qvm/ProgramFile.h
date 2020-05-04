@@ -74,6 +74,11 @@ namespace ProgramFileV1 {
          * Кол-во команд в программе.
          */
         uint64_t commandsCount;
+
+        /**
+         * Кол-во константных строк.
+         */
+        uint32_t stringConstantsCount;
     };
 
     static_assert(sizeof(ProgramMetadataMarshaled) == 512,
