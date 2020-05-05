@@ -41,6 +41,10 @@ public:
         waitForAll(std::move(threads));
     }
 
+    bool wasCanceled() const;
+
+    const std::string &cancelReason() const;
+
 private:
     /**
      * Создать потоки для работы.

@@ -10,13 +10,16 @@ using namespace ProgramFileV1;
 namespace {
     template<typename T>
     T read(std::istream &is) {
-        T value{};
+        union {
+            T asResult{};
+            char asByteArray[sizeof(T)];
+        } value;
         auto src = std::istreambuf_iterator(is);
-        auto dest = reinterpret_cast<std::istream::char_type *>(&value);
+        auto *dest = value.asByteArray;
         for (int i = 0; i < sizeof(T); ++i) {
             *dest++ = *src++;
         }
-        return value;
+        return value.asResult;
     }
 }
 
@@ -45,8 +48,8 @@ void ProgramFileReaderV1::readProgramMetadata(std::ifstream &is) {
     m_memorySize = metadata.memorySize;
     m_inputParams = readParams(is, metadata.inputParametersCount);
     m_outputParams = readParams(is, metadata.outputParametersCount);
-    readCommands(is, metadata.commandsCount);
     readStrings(is, metadata.stringConstantsCount);
+    readCommands(is, metadata.commandsCount);
 }
 
 std::vector<ParameterMetadata> ProgramFileReaderV1::readParams(std::ifstream &is, size_t count) {
@@ -68,9 +71,10 @@ std::vector<ParameterMetadata> ProgramFileReaderV1::readParams(std::ifstream &is
 
 static std::string readString(std::ifstream &is, size_t &readBytes) {
     std::string result;
-    for (char ch = 0; is.get(ch) && ch != '\0'; ++readBytes) {
+    for (char ch = 0; is.get(ch) && ch != '\0';) {
         result += ch;
     }
+    readBytes += result.size() + 1;
     return result;
 }
 
@@ -84,14 +88,14 @@ void ProgramFileReaderV1::readStrings(std::ifstream &is, size_t count) {
     // Выравниевание
     if (readBytes != 0) {
         std::istream_iterator<char> begin(is);
-        std::advance(begin, 16 - (readBytes & 0xFFu));
+        std::advance(begin, 16 - (readBytes % 16) - 1);
     }
 }
 
 Version ProgramFileReaderV1::parseVersion(char *begin) {
-    auto end = begin + strlen(begin);
-    auto firstPoint = std::find(begin, end, '.');
-    auto secondPoint = end;
+    auto *end = begin + strlen(begin);
+    auto *firstPoint = std::find(begin, end, '.');
+    auto *secondPoint = end;
     if (firstPoint != end) {
         secondPoint = std::find(firstPoint + 1, end, '.');
     }

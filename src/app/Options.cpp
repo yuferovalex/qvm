@@ -29,7 +29,7 @@ void Options::fillOptionsDescription() {
             )
             (
                     "program,p",
-                    boost::program_options::value(&m_program),
+                    boost::program_options::value(&m_program)->default_value("program.qvm"),
                     "path of program to execute (this is a required parameter)"
             )
             (

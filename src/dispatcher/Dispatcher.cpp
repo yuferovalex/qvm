@@ -5,6 +5,14 @@ Dispatcher::Dispatcher(DispatcherConfig &config)
     , m_dispatchingFinished(false)
 {}
 
+bool Dispatcher::wasCanceled() const {
+    return (bool) m_cancel;
+}
+
+const std::string &Dispatcher::cancelReason() const {
+    return m_cancel.reason();
+}
+
 std::vector<std::thread> Dispatcher::createThreads() {
     m_dispatchingFinished = false;
     size_t threadCount = m_config.threadCount();

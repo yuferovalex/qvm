@@ -4,7 +4,6 @@
 #include <boost/filesystem/path.hpp>
 
 #include "qvm/ParameterMetadata.h"
-#include "utils/Timer.h"
 
 class ProgramFileReaderV1;
 
@@ -19,7 +18,6 @@ private:
 
     int m_argc;
     const char **m_argv;
-    Timer m_executionTimer;
 };
 
 

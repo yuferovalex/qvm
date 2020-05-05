@@ -17,6 +17,7 @@
 #include "memory/SharedMemory.h"
 #include "memory/LocalStringVault.h"
 #include "utils/utils.h"
+#include "utils/Timer.h"
 
 SharedMemoryApplication::SharedMemoryApplication(int argc, const char **argv)
     : m_argc(argc), m_argv(argv)
@@ -42,7 +43,11 @@ int SharedMemoryApplication::run() {
         validateProgramOption(programPath);
 
         LocalStringVault stringVault;
+        Timer executionTimer("MAIN THREAD");
+        executionTimer.setExecuting(options.trackExecutionTime());
+        executionTimer.start("READING PROGRAM FILE");
         ProgramFileReaderV1 programReader(programPath, stringVault);
+        executionTimer.finish();
 
         options.parseParams(programReader.inputParamsMeta(), programReader.outputParamsMeta());
 
@@ -63,18 +68,22 @@ int SharedMemoryApplication::run() {
                 options.threadCount());
         Dispatcher dispatcher(dispatcherConfig);
 
+        executionTimer.start("READING INPUT DATA FROM FILES");
         dataReader.readInput(programReader.inputParamsMeta());
-        m_executionTimer.start();
-        dispatcher.execute(programReader.commandStreamBegin(), programReader.commandStreamEnd());
-        m_executionTimer.stop();
-        dataReader.writeOutput(programReader.outputParamsMeta());
 
-        if (options.trackExecutionTime()) {
-            using std::chrono::duration_cast;
-            using std::chrono::nanoseconds;
-            auto timeElapsed = duration_cast<nanoseconds>(m_executionTimer.duration());
-            std::cout << "Execution time: " << timeElapsed.count() << "ns" << std::endl;
+        executionTimer.start("EXECUTING PROGRAM");
+        dispatcher.execute(programReader.commandStreamBegin(), programReader.commandStreamEnd());
+
+        if (dispatcher.wasCanceled()) {
+            std::cout << executionTimer.results() << dispatcher.cancelReason() << std::endl;
+            return EXIT_SUCCESS;
         }
+
+        executionTimer.start("WRITING OUTPUT DATA TO FILES");
+        dataReader.writeOutput(programReader.outputParamsMeta());
+        executionTimer.finish();
+
+        std::cout << executionTimer.results();
 
         return EXIT_SUCCESS;
     }
