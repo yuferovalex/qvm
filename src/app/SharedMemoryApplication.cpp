@@ -34,8 +34,8 @@ int SharedMemoryApplication::run() {
             return EXIT_SUCCESS;
         }
 
-        if (options.isShowHelp() && options.programPath().empty()) {
-
+        if (options.isShowHelp()) {
+            options.showOptionsDescription();
             return EXIT_SUCCESS;
         }
 
@@ -53,11 +53,6 @@ int SharedMemoryApplication::run() {
 
         if (options.isShowProgramInfo()) {
             printProgramInfo(programReader);
-            return EXIT_SUCCESS;
-        }
-
-        if (options.isShowHelp()) {
-            options.showOptionsDescription();
             return EXIT_SUCCESS;
         }
         
