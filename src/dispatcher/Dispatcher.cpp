@@ -9,7 +9,7 @@ bool Dispatcher::wasCanceled() const {
     return (bool) m_cancel;
 }
 
-const std::string &Dispatcher::cancelReason() const {
+std::string Dispatcher::cancelReason() const {
     return m_cancel.reason();
 }
 

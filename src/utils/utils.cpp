@@ -9,7 +9,8 @@ buildParamOptions(const std::vector<ParameterMetadata> &params, const std::strin
         description.add_options()
             (
                     ("param:" + param.name).c_str(),
-                    boost::program_options::value<boost::filesystem::path>(),
+                    boost::program_options::value<boost::filesystem::path>()
+                            ->default_value(param.name + ".csv"),
                     param.description.c_str()
             );
     }

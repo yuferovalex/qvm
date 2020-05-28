@@ -8,7 +8,7 @@ class CancellationToken {
 public:
     explicit operator bool() const { return m_cancelled; }
 
-    auto reason() const {
+    std::string reason() const {
         std::unique_lock lock(m_mutex);
         return m_reason;
     }

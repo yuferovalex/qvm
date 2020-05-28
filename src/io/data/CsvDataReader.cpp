@@ -49,7 +49,12 @@ void CsvDataReader::writeMatrix(std::ostream &ostream, const ParameterMetadata &
     Command::Reference pointer = meta.address;
     for (size_t i = 0; i < meta.rows; ++i) {
         for (size_t j = 0; j < meta.columns; ++j) {
-            ostream << m_memory.value(pointer).value().number << (char) DEFAULT_DELIMITER;
+            auto value = m_memory.value(pointer);
+            if (value) {
+                ostream << value.value().number << (char) DEFAULT_DELIMITER;
+            } else {
+                ostream << "no value" << (char) DEFAULT_DELIMITER;
+            }
             pointer++;
         }
         ostream << ostream.widen('\n');

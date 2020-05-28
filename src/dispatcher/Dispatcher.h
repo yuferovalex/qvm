@@ -43,7 +43,7 @@ public:
 
     bool wasCanceled() const;
 
-    const std::string &cancelReason() const;
+    std::string cancelReason() const;
 
 private:
     /**

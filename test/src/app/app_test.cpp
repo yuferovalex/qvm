@@ -17,7 +17,7 @@ TEST(app_test, product) {
     });
 }
 
-TEST(app_test, DISABLED_sqare_eq) {
+TEST(app_test, sqare_eq) {
     auto args = std::vector {
             "qvm", "-p", "resources/sqare_eq/program.qvm",
             "--param:a", "resources/sqare_eq/a.csv",
